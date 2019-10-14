@@ -5,7 +5,24 @@
     <title></title>
 </head>
 <body>
-
+    <h1>Categories</h1>
+    <form action="/categories" method="POST">
+        <label for="category">Add a category</label>
+        <br></br>
+        <input type="text" name="category">
+        <br></br>
+        <button type="submit">Add a category</button>
+    </form>
+    <br>
+    {% for c in categories %}
+    <a href="/{{ c.name }}">{{ c.name }}</a><br>
+    <form action="/delete_a_category" method="POST">
+    <input type="hidden" name="category_id" value="{{ c.id }}">
+    <button type="submit">Delete</button>
+    </form>
+    <br><br>
+    {% endfor %}
+    <br><hr>
     <h1>Upload Your Files</h1>
 
     <form action="/" method="POST" enctype="multipart/form-data">

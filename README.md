@@ -28,4 +28,6 @@ filters.py<br>
 model.py<br>
 4. Запускаем приложение<br>
 export FLASK_APP=webapp && export FLASK_ENV=development && flask run</p>
-
+5. Создадим в корне проекта файл (educational_platform/create_db.py) для создания базы данных<br>
+Запустим файл create_db.py и убедимся, что база создалась<br>
+python create_db.py<br>
