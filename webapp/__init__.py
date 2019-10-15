@@ -84,8 +84,9 @@ def create_app():
         try:
             name = request.form['category']
             new_category = Category(name)
-            db.session.add(new_category)
-            db.session.commit()
+            if new_category.name != '':
+                db.session.add(new_category)
+                db.session.commit()
         except(exc.IntegrityError):
             print('the category exists')
             return redirect('/')     
@@ -101,7 +102,27 @@ def create_app():
             return redirect('/')    
         return redirect('/') 
 
-    
+    @app.route('/<category_name>', methods=['GET', 'POST'])
+    def page(category_name):
+        category_exists = Category.query.filter_by(name=category_name).first()
+        if category_exists:
+            if request.method == 'POST':
+                try:
+                    name = request.form['course']
+                    course_description = 'This is the best course'
+                    new_course = Course(name, category_exists.id, course_description)              
+                    if new_course.name != '':
+                        db.session.add(new_course)
+                        db.session.commit()
+                except(exc.IntegrityError):
+                    print('the course exists')
+                return redirect('/'+category_name) 
+            else:
+                courses = Course.query.filter(Course.category_id==category_exists.id).all()    
+                return render_template('category.html', category_name=category_name, courses=courses)  
+        else:
+            return render_template('error.html')     
+
     return app
     # if __name__ == "__main__":
     #     app.run()

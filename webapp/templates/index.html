@@ -15,7 +15,7 @@
     </form>
     <br>
     {% for c in categories %}
-    <a href="/{{ c.name }}">{{ c.name }}</a><br>
+    <a href="{{ url_for('page', category_name=c.name) }}">{{ c.name }}</a><br>
     <form action="/delete_a_category" method="POST">
     <input type="hidden" name="category_id" value="{{ c.id }}">
     <button type="submit">Delete</button>

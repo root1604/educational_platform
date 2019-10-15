@@ -1,0 +1,17 @@
+<a href="/">Return to homepage</a>
+<h1>{{ category_name }}</h1><hr>
+<h3>Courses</h3>
+<form action="{{ url_for('page', category_name=category_name) }}" method="POST">
+    <label for="course">Add a course</label>
+    <br></br>
+    <input type="text" name="course">
+    <br></br>
+    <button type="submit">Add a course</button>
+</form>
+<br>
+{% for c in courses %}
+{{ c.name }}
+
+<br><br>
+{% endfor %}
+<br><hr> 
