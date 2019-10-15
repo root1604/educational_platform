@@ -33,6 +33,11 @@ class Lesson(db.Model):
     videos = db.relationship('Video', backref='lesson', lazy='dynamic')
     images = db.relationship('Image', backref='lesson', lazy='dynamic')
     textlectures = db.relationship('TextLecture', backref='lesson', lazy='dynamic')
+    __table_args__ = (db.UniqueConstraint('course_id', 'name'),)
+    def __init__(self, name, course_id, description):
+        self.name = name 
+        self.course_id = course_id
+        self.description = description 
     def __repr__(self):
         return '<Lesson {}>'.format(self.name)   
 

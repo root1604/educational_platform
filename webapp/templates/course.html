@@ -1,1 +1,21 @@
-<h1>Course</h1>
+<a href="/">Return to homepage</a>
+<h1>{{ course_name }}</h1><hr>
+<h3>Lessons</h3>
+<form action={{ url_for('course_page', category_name=category_name, course_name=course_name) }} method="POST">
+    <label for="lesson">Add a lesson</label>
+    <br></br>
+    <input type="text" name="lesson">
+    <br></br>
+    <button type="submit">Add a lesson</button>
+</form>
+<br>
+{% for l in lessons %}
+<a href="{{ url_for('lesson_page', category_name=category_name, course_name=course_name, lesson_name=l.name) }}">{{ l.name }}</a><br>
+<form action="/delete_a_lesson" method="POST">
+    <input type="hidden" name="lesson_id" value="{{ l.id }}">
+    <button type="submit">Delete</button>
+    </form>
+    <br>
+<br>
+{% endfor %}
+<br><hr> 
