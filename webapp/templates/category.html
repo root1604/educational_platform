@@ -8,7 +8,7 @@
     <br></br>
     <button type="submit">Add a course</button>
 </form>
-<br>
+<br><hr>
 {% for c in courses %}
 <a href="{{ url_for('course_page', category_name=category_name, course_name=c.name) }}">{{ c.name }}</a><br>
     <form action="/delete_a_course" method="POST">
@@ -17,4 +17,4 @@
     </form>
     <br><br>
 {% endfor %}
-<br><hr> 
+<br> 

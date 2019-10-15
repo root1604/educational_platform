@@ -1,1 +1,29 @@
-<h1>Lesson</h1>
+<a href="/">Return to homepage</a>
+<h1>{{ course_name }}</h1>
+<h2>{{ lesson_name }}</h2><hr>
+<h1>Upload {{ lesson_name }} files</h1>
+    <form action={{ url_for('lesson_page', category_name=category_name, course_name=course_name, lesson_name=lesson_name) }} method="POST" enctype="multipart/form-data">
+        <label for="user_file">Upload your file</label>
+        <br></br>
+        <input type="file" name="user_file">
+        <br></br>
+        <button type="submit">Upload</button>
+    </form>
+    <br><hr>
+    {% for f in files %}
+    {{ f.key }}<form action="/delete" method="POST">
+        <input type="hidden" name="key" value="{{ f.key }}">
+        <button type="submit">Delete</button>
+      </form><form action="/download" method="POST">
+        <input type="hidden" name="key" value="{{ f.key }}">
+        <button type="submit">Download</button>
+      </form>
+      {{ f.key | file_type }}
+      {% set type_of_file = f.key | file_type %}
+      {% if type_of_file == 'video/mp4' %}
+      {% set link = f.bucket_name | create_presigned_url(f.key, '3600') %}
+      <video controls>
+          <source src="{{ link }}" type="video/mp4"></video><br>
+      {% endif %}      
+    <hr>
+    {% endfor %}

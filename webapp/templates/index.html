@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-    <h1>Categories</h1>
+    <h1>Categories</h1><hr>
     <form action="/categories" method="POST">
         <label for="category">Add a category</label>
         <br></br>
@@ -13,7 +13,7 @@
         <br></br>
         <button type="submit">Add a category</button>
     </form>
-    <br>
+    <br><hr>
     {% for c in categories %}
     <a href="{{ url_for('page', link_path=c.name) }}">{{ c.name }}</a><br>
     <form action="/delete_a_category" method="POST">
@@ -22,37 +22,6 @@
     </form>
     <br><br>
     {% endfor %}
-    <br><hr>
-    <h1>Upload Your Files</h1>
-
-    <form action="/" method="POST" enctype="multipart/form-data">
-
-        <label for="user_file">Upload Your File</label>
-        <br></br>
-        <input type="file" name="user_file">
-        <br></br>
-        <button type="submit">Upload</button>
-
-    </form>
-    <br><hr>
-    {% for f in files %}
-    {{ f.key }}<form action="/delete" method="POST">
-        <input type="hidden" name="key" value="{{ f.key }}">
-        <button type="submit">Delete</button>
-      </form><form action="/download" method="POST">
-        <input type="hidden" name="key" value="{{ f.key }}">
-        <button type="submit">Download</button>
-      </form>
-      {{ f.key | file_type }}
-      {% set type_of_file = f.key | file_type %}
-      {% if type_of_file == 'video/mp4' %}
-      {% set link = f.bucket_name | create_presigned_url(f.key, '3600') %}
-      <video controls>
-          <source src="{{ link }}" type="video/mp4"></video><br>
-      
-      {% endif %}      
-    <hr>
-    {% endfor %}
+    <br>
 </body>
-
 </html>

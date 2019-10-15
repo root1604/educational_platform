@@ -8,7 +8,7 @@
     <br></br>
     <button type="submit">Add a lesson</button>
 </form>
-<br>
+<br><hr>
 {% for l in lessons %}
 <a href="{{ url_for('lesson_page', category_name=category_name, course_name=course_name, lesson_name=l.name) }}">{{ l.name }}</a><br>
 <form action="/delete_a_lesson" method="POST">
@@ -18,4 +18,4 @@
     <br>
 <br>
 {% endfor %}
-<br><hr> 
+<br>

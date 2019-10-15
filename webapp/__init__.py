@@ -18,34 +18,10 @@ def create_app():
     
     bucket = app.config["S3_BUCKET"]
 
-    @app.route('/', methods=['GET', 'POST'])
+    @app.route('/', methods=['GET'])
     def index():
-        if request.method == 'POST':
-            if "user_file" not in request.files:
-                return "No user_file key in request.files"
-            file = request.files["user_file"]
-            if file.filename == "":
-                return "Please select a file"
-            if file and allowed_file(file.filename):
-                file.filename = secure_filename(file.filename)
-                upload_file_to_s3(file, bucket)
-                my_bucket = get_bucket_from_s3()
-                if my_bucket == None:
-                    return render_template('error.html') 
-                else:
-                    categories = Category.query.all()
-                    summaries = my_bucket.objects.all()
-                    return render_template('index.html', files=summaries, categories=categories)
-            else:
-                return redirect("/")    
-        else:
-            my_bucket = get_bucket_from_s3()
-            if my_bucket == None:
-                return render_template('error.html') 
-            else:  
-                categories = Category.query.all()  
-                summaries = my_bucket.objects.all()
-                return render_template('index.html', files=summaries, categories=categories)
+        categories = Category.query.all()  
+        return render_template('index.html', categories=categories)
     
     def allowed_file(filename):
         return '.' in filename and \
@@ -61,11 +37,20 @@ def create_app():
 
     @app.route('/delete', methods=['POST'])
     def delete():
+        # lesson_id = request.form['lesson_id']
+        # lesson_for_delete=Lesson.query.filter_by(id=lesson_id).first()
+        # course_name=lesson_for_delete.course.name
+        # category_name=lesson_for_delete.course.category.name
         key = request.form['key']
-        my_bucket = get_bucket_from_s3()
-        if my_bucket != None:
-            my_bucket.Object(key).delete()
-        return redirect('/')
+        try:
+            my_bucket = get_bucket_from_s3()
+            if my_bucket != None:
+                my_bucket.Object(key).delete()
+        except: 
+            return redirect('/')  
+        return redirect('/')         
+        #     return redirect('/' + category_name + '/' + course_name)
+        # return redirect('/' + category_name + '/' + course_name)    
 
     @app.route('/download', methods=['POST'])
     def download():
@@ -150,7 +135,38 @@ def create_app():
 
     @app.route('/<category_name>/<course_name>/<lesson_name>', methods=['GET', 'POST'])
     def lesson_page(category_name, course_name, lesson_name):
-        return render_template('lesson.html', category_name=category_name, course_name=course_name, lesson_name=lesson_name)
+        category_exists = Category.query.filter_by(name=category_name).first()
+        if category_exists:
+            course_exists = Course.query.filter(Course.name==course_name, Course.category_id==category_exists.id).first() 
+            if course_exists:
+                lesson_exists = Lesson.query.filter(Lesson.name==lesson_name, Lesson.course_id==course_exists.id).first()
+                if lesson_exists:
+                    if request.method == 'POST':
+                        if "user_file" not in request.files:
+                            return "No user_file key in request.files"
+                        file = request.files["user_file"]
+                        if file.filename == "":
+                            return "Please select a file"
+                        if file and allowed_file(file.filename):
+                            file.filename = secure_filename(file.filename)
+                            aws_key = upload_file_to_s3(file, bucket)
+                            type_of_file = file_type(file.filename)
+                            my_bucket = get_bucket_from_s3()
+                            if my_bucket == None:
+                                return render_template('error.html') 
+                            else:
+                                summaries = my_bucket.objects.all()
+                                return render_template('lesson.html', category_name=category_name, course_name=course_name, lesson_name=lesson_name, files=summaries)
+                    else:
+                        my_bucket = get_bucket_from_s3()
+                        summaries = my_bucket.objects.all()
+                        return render_template('lesson.html', category_name=category_name, course_name=course_name, lesson_name=lesson_name, files=summaries)
+                else:
+                    return render_template('error.html')     
+            else:
+                return render_template('error.html')    
+        else:
+            return render_template('error.html')   
 
     @app.route('/delete_a_course', methods=['POST'])
     def delete_a_course():
