@@ -1,7 +1,7 @@
 <a href="/">Return to homepage</a>
 <h1>{{ category_name }}</h1><hr>
 <h3>Courses</h3>
-<form action="{{ url_for('page', category_name=category_name) }}" method="POST">
+<form action="{{ url_for('page', link_path=category_name) }}" method="POST">
     <label for="course">Add a course</label>
     <br></br>
     <input type="text" name="course">
@@ -10,8 +10,12 @@
 </form>
 <br>
 {% for c in courses %}
-{{ c.name }}
-
-<br><br>
+{% set course_name = category_name + '/' + c.name %}
+<a href="{{ url_for('page', link_path=course_name) }}">{{ c.name }}</a><br>
+    <form action="/delete_a_course" method="POST">
+    <input type="hidden" name="course_id" value="{{ c.id }}">
+    <button type="submit">Delete</button>
+    </form>
+    <br><br>
 {% endfor %}
 <br><hr> 

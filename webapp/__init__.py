@@ -102,26 +102,41 @@ def create_app():
             return redirect('/')    
         return redirect('/') 
 
-    @app.route('/<category_name>', methods=['GET', 'POST'])
-    def page(category_name):
-        category_exists = Category.query.filter_by(name=category_name).first()
-        if category_exists:
-            if request.method == 'POST':
-                try:
-                    name = request.form['course']
-                    course_description = 'This is the best course'
-                    new_course = Course(name, category_exists.id, course_description)              
-                    if new_course.name != '':
-                        db.session.add(new_course)
-                        db.session.commit()
-                except(exc.IntegrityError):
-                    print('the course exists')
-                return redirect('/'+category_name) 
+    @app.route('/<link_path>', methods=['GET', 'POST'])
+    def page(link_path):
+        if link_path.count('/') == 0:  # This is a category
+            category_exists = Category.query.filter_by(name=link_path).first()
+            if category_exists:
+                if request.method == 'POST':
+                    try:
+                        name = request.form['course']
+                        course_description = 'This is the best course'
+                        new_course = Course(name, category_exists.id, course_description)              
+                        if new_course.name != '':
+                            db.session.add(new_course)
+                            db.session.commit()
+                    except(exc.IntegrityError):
+                        print('the course exists')
+                    return redirect('/'+link_path) 
+                else:
+                    courses = Course.query.filter(Course.category_id==category_exists.id).all()    
+                    return render_template('category.html', category_name=link_path, courses=courses)  
             else:
-                courses = Course.query.filter(Course.category_id==category_exists.id).all()    
-                return render_template('category.html', category_name=category_name, courses=courses)  
-        else:
-            return render_template('error.html')     
+                return render_template('error.html')    
+        elif  link_path.count('/') == 1:  # This is a course
+            return render_template('course.html')          
+
+    @app.route('/delete_a_course', methods=['POST'])
+    def delete_a_course():
+        course_id = request.form['course_id']
+        course_for_delete=Course.query.filter_by(id=course_id).first()
+        category_name=course_for_delete.category.name
+        try:        
+            Course.query.filter_by(id=course_id).delete() 
+            db.session.commit()
+        except:
+            return redirect('/'+category_name)    
+        return redirect('/'+category_name) 
 
     return app
     # if __name__ == "__main__":
