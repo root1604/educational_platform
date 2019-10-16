@@ -11,8 +11,9 @@
     </form>
     <br><hr>
     {% for f in files %}
+    {% set data_for_delete = f.key + '*' + category_name + '*' + course_name + '*' + lesson_name %}
     {{ f.key }}<form action="/delete" method="POST">
-        <input type="hidden" name="key" value="{{ f.key }}">
+        <input type="hidden" name="key" value="{{ data_for_delete }}">
         <button type="submit">Delete</button>
       </form><form action="/download" method="POST">
         <input type="hidden" name="key" value="{{ f.key }}">
@@ -20,10 +21,10 @@
       </form>
       {{ f.key | file_type }}
       {% set type_of_file = f.key | file_type %}
-      {% if type_of_file == 'video/mp4' %}
-      {% set link = f.bucket_name | create_presigned_url(f.key, '3600') %}
+      {% if type_of_file in ['video/mp4']  %}
+      {% set link = f.bucket_name.name | create_presigned_url(f.key, '3600') %}
       <video controls>
-          <source src="{{ link }}" type="video/mp4"></video><br>
+          <source src="{{ link }}" type="{{ type_of_file }}"></video><br>
       {% endif %}      
     <hr>
     {% endfor %}

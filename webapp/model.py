@@ -33,6 +33,7 @@ class Lesson(db.Model):
     videos = db.relationship('Video', backref='lesson', lazy='dynamic')
     images = db.relationship('Image', backref='lesson', lazy='dynamic')
     textlectures = db.relationship('TextLecture', backref='lesson', lazy='dynamic')
+    audios = db.relationship('Audio', backref='lesson', lazy='dynamic')
     __table_args__ = (db.UniqueConstraint('course_id', 'name'),)
     def __init__(self, name, course_id, description):
         self.name = name 
@@ -43,38 +44,42 @@ class Lesson(db.Model):
 
 class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(1000), nullable=False)
     lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'), nullable=False)
-    aws_key = db.Column(db.String(2000), nullable=True)
-    def __init__(self, name, lesson_id, url):
+    def __init__(self, name, lesson_id):
         self.name = name 
         self.lesson_id = lesson_id
-        self.aws_key = aws_key
     def __repr__(self):
         return '<Video {}>'.format(self.name)       
 
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(1000), nullable=False)
     lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'), nullable=False)
-    aws_key = db.Column(db.String(2000), nullable=True)
-    def __init__(self, name, lesson_id, url):
+    def __init__(self, name, lesson_id):
         self.name = name 
         self.lesson_id = lesson_id
-        self.aws_key = aws_key
     def __repr__(self):
         return '<Image {}>'.format(self.name)                 
 
 class TextLecture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(1000), nullable=False)
     lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'), nullable=False)
     text = db.Column(db.Text(1000), nullable=True)
-    aws_key = db.Column(db.String(2000), nullable=True)
-    def __init__(self, name, lesson_id, url):
+    def __init__(self, name, lesson_id, text):
         self.name = name 
         self.lesson_id = lesson_id
         self.text = text 
-        self.aws_key = aws_key
     def __repr__(self):
-        return '<TextLecture {}>'.format(self.name)                         
+        return '<TextLecture {}>'.format(self.name)       
+
+class Audio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(1000), nullable=False)
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'), nullable=False)
+    def __init__(self, name, lesson_id):
+        self.name = name 
+        self.lesson_id = lesson_id
+    def __repr__(self):
+        return '<Audio {}>'.format(self.name)                              
