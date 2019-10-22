@@ -1,3 +1,12 @@
+{% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
 <a href="/">Return to homepage</a>
 <h1>{{ category_name }}</h1><hr>
 <h3>Courses</h3>

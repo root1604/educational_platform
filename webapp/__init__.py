@@ -1,10 +1,12 @@
 import boto3
-from flask import Flask, render_template, request, redirect, Response
-from werkzeug.utils import secure_filename
+from flask import flash, Flask, redirect, render_template, request, Response, url_for
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from webapp.upload_file_to_s3 import upload_file_to_s3
 from webapp.filters import file_type
 from webapp.filters import create_presigned_url
-from webapp.model import db, Category, Course, Lesson, Video, Image, TextLecture, Audio
+from webapp.forms import LoginForm
+from webapp.model import Audio, Category, Course, db, Image, Lesson, TextLecture, User, Video
+from werkzeug.utils import secure_filename
 from sqlalchemy import exc
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'avi', 'mp4', 'mp3'])
@@ -17,6 +19,15 @@ def create_app():
     app = Flask(__name__)
     app.config.from_pyfile("config.py")
     db.init_app(app)
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'login'
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(user_id)
+
     app.jinja_env.filters['file_type'] = file_type
     app.jinja_env.filters['create_presigned_url'] = create_presigned_url
     
@@ -40,6 +51,7 @@ def create_app():
             return None    
 
     @app.route('/delete', methods=['POST'])
+    @login_required
     def delete():
         key = (request.form['key'])
         key = key.split('*')
@@ -101,6 +113,7 @@ def create_app():
         return redirect(link)          
 
     @app.route('/download', methods=['POST'])
+    @login_required
     def download():
         key = request.form['key']
         my_bucket = get_bucket_from_s3()
@@ -113,6 +126,7 @@ def create_app():
         )
 
     @app.route('/categories', methods=['POST'])
+    @login_required    
     def add_a_category():
         try:
             name = request.form['category']
@@ -126,6 +140,7 @@ def create_app():
         return redirect('/')  
 
     @app.route('/delete_a_category', methods=['POST'])
+    @login_required    
     def delete_a_category():
         try:
             category_id = request.form['category_id']
@@ -136,6 +151,7 @@ def create_app():
         return redirect('/') 
 
     @app.route('/<link_path>', methods=['GET', 'POST'])
+    @login_required
     def page(link_path):
         category_exists = Category.query.filter_by(name=link_path).first()
         if category_exists:
@@ -157,6 +173,7 @@ def create_app():
             return render_template('error.html')         
     
     @app.route('/<category_name>/<course_name>', methods=['GET', 'POST'])
+    @login_required    
     def course_page(category_name, course_name):
         category_exists = Category.query.filter_by(name=category_name).first()
         if category_exists:
@@ -182,6 +199,7 @@ def create_app():
             return render_template('error.html')         
 
     @app.route('/<category_name>/<course_name>/<lesson_name>', methods=['GET', 'POST'])
+    @login_required    
     def lesson_page(category_name, course_name, lesson_name):
         category_exists = Category.query.filter_by(name=category_name).first()
         if category_exists:
@@ -271,6 +289,7 @@ def create_app():
             return render_template('error.html')   
 
     @app.route('/delete_a_course', methods=['POST'])
+    @login_required    
     def delete_a_course():
         course_id = request.form['course_id']
         course_for_delete=Course.query.filter_by(id=course_id).first()
@@ -283,6 +302,7 @@ def create_app():
         return redirect('/'+category_name) 
 
     @app.route('/delete_a_lesson', methods=['POST'])
+    @login_required    
     def delete_a_lesson():
         lesson_id = request.form['lesson_id']
         lesson_for_delete=Lesson.query.filter_by(id=lesson_id).first()
@@ -294,5 +314,40 @@ def create_app():
         except:
             return redirect('/' + category_name + '/' + course_name)    
         return redirect('/' + category_name + '/' + course_name) 
+
+    @app.route('/login')
+    def login():
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+        title = "Authorization"
+        login_form = LoginForm()
+        return render_template('login.html', page_title=title, form=login_form)   
+
+    @app.route('/process-login', methods=['POST'])
+    def process_login():
+        form = LoginForm()
+        if form.validate_on_submit():
+            user = User.query.filter_by(username=form.username.data).first()
+            if user and user.check_password(form.password.data):
+                login_user(user, remember=form.remember_me.data)
+                flash('You are logged in')
+                return redirect(url_for('index'))
+
+        flash('The username or password is wrong')
+        return redirect(url_for('login'))
+
+    @app.route('/logout')
+    def logout():
+        logout_user()
+        flash('You are logged out')
+        return redirect(url_for('index'))  
+
+    @app.route('/admin')
+    @login_required
+    def admin_index():
+        if current_user.is_admin:
+            return 'You are admin'
+        else:
+            return 'You are user'          
 
     return app

@@ -5,6 +5,15 @@
     <title></title>
 </head>
 <body>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+            {% for message in messages %}
+                {{ message }}<br>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
     <h1>Categories</h1><hr>
     <form action="/categories" method="POST">
         <label for="category">Add a category</label>
@@ -14,10 +23,10 @@
         <button type="submit">Add a category</button>
     </form>
     <br><hr>
-    {% for c in categories %}
-    <a href="{{ url_for('page', link_path=c.name) }}">{{ c.name }}</a><br>
+    {% for category in categories %}
+    <a href="{{ url_for('page', link_path=category.name) }}">{{ category.name }}</a><br>
     <form action="/delete_a_category" method="POST">
-    <input type="hidden" name="category_id" value="{{ c.id }}">
+    <input type="hidden" name="category_id" value="{{ category.id }}">
     <button type="submit">Delete</button>
     </form>
     <br><br>
