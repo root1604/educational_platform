@@ -18,6 +18,14 @@ class User(db.Model, UserMixin):
     def is_admin(self):
         return self.role == 'admin'
 
+    @property
+    def is_teacher(self):
+        return self.role == 'teacher'    
+
+    @property
+    def is_student(self):
+        return self.role == 'student'    
+
     def __repr__(self):
         return '<User {}>'.format(self.username) 
     

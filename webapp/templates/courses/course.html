@@ -2,20 +2,24 @@
 {% block content %}
     <h1>{{ course_name }}</h1><hr>
     <h3>Lessons</h3>
-    <form action={{ url_for('course.course_page', category_name=category_name, course_name=course_name) }} method="POST">
-        <label for="lesson">Add a lesson</label>
-        <br></br>
-        <input type="text" name="lesson">
-        <br></br>
-        <button type="submit">Add a lesson</button>
-    </form>
+    {% if current_user.is_admin or current_user.is_teacher %}
+        <form action={{ url_for('course.course_page', category_name=category_name, course_name=course_name) }} method="POST">
+            <label for="lesson">Add a lesson</label>
+            <br></br>
+            <input type="text" name="lesson">
+            <br></br>
+            <button type="submit">Add a lesson</button>
+        </form>
+    {% endif %}
     <br><hr>
     {% for lesson_counter in lessons %}
         <a href="{{ url_for('lesson.lesson_page', category_name=category_name, course_name=course_name, lesson_name=lesson_counter.name) }}">{{ lesson_counter.name }}</a><br>
-        <form action="/delete_a_lesson" method="POST">
-            <input type="hidden" name="lesson_id" value="{{ lesson_counter.id }}">
-            <button type="submit">Delete</button>
-        </form>
+        {% if current_user.is_admin or current_user.is_teacher %}
+            <form action="/delete_a_lesson" method="POST">
+                <input type="hidden" name="lesson_id" value="{{ lesson_counter.id }}">
+                <button type="submit">Delete</button>
+            </form>
+        {% endif %}
         <br><br>
     {% endfor %}
     <br>

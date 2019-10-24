@@ -1,21 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>CATEGORIES</h1><hr>
-    <form action="/categories" method="POST">
-    <label for="category">Add a category</label>
-    <br></br>
-    <input type="text" name="category">
-    <br></br>
-    <button type="submit">Add a category</button>
-    </form>
-    <br><hr>
+    {% if current_user.is_admin %}
+        <form action="/categories" method="POST">
+            <label for="category">Add a category</label>
+            <br></br>
+            <input type="text" name="category">
+            <br></br>
+            <button type="submit">Add a category</button>
+        </form>
+        <br><hr>
+    {% endif %}
     {% for category_counter in categories %}
         <a href="{{ url_for('category.page', link_path=category_counter.name) }}">{{ category_counter.name }}</a><br><br>
-        <form action="/delete_a_category" method="POST">
-        <input type="hidden" name="category_id" value="{{ category_counter.id }}">
-        <button type="submit">Delete</button>
-        </form>
-        <br><br>
+        {% if current_user.is_admin %}
+            <form action="/delete_a_category" method="POST">
+                <input type="hidden" name="category_id" value="{{ category_counter.id }}">
+                <button type="submit">Delete</button>
+            </form>
+            <br><br>
+        {% endif %}
     {% endfor %}
     <br>
 {% endblock %}

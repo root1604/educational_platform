@@ -1,32 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ course_name }}</h1>
-<h2>{{ lesson_name }}</h2><hr>
-<h1>Upload {{ lesson_name }} files</h1>
-    <form action={{ url_for('lesson.lesson_page', category_name=category_name, course_name=course_name, lesson_name=lesson_name) }} method="POST" enctype="multipart/form-data">
-        <label for="user_file">Upload your file</label>
-        <br></br>
-        <input type="file" name="user_file">
-        <br></br>
-        <button type="submit">Upload</button>
-    </form>
-    <br><hr>
-    {% for file_counter in files %}
-    {% set data_for_delete = file_counter.key + '*' + category_name + '*' + course_name + '*' + lesson_name %}
-    {{ file_counter.key }}<form action="/delete" method="POST">
-        <input type="hidden" name="key" value="{{ data_for_delete }}">
-        <button type="submit">Delete</button>
-      </form><form action="/download" method="POST">
-        <input type="hidden" name="key" value="{{ file_counter.key }}">
-        <button type="submit">Download</button>
-      </form>
-      {{ file_counter.key | file_type }}
-      {% set type_of_file = file_counter.key | file_type %}
-      {% if type_of_file in ['video/mp4']  %}
-      {% set link = file_counter.bucket_name.name | create_presigned_url(file_counter.key, '3600') %}
-      <video controls>
-          <source src="{{ link }}" type="{{ type_of_file }}"></video><br>
-      {% endif %}      
-    <hr>
-    {% endfor %}
+  <h1>{{ course_name }}</h1>
+  <h2>{{ lesson_name }}</h2>
+      {% if current_user.is_admin or current_user.is_teacher %}
+          <hr>
+          <h1>Upload {{ lesson_name }} files</h1>
+          <form action={{ url_for('lesson.lesson_page', category_name=category_name, course_name=course_name, lesson_name=lesson_name) }} method="POST" enctype="multipart/form-data">
+              <label for="user_file">Upload your file</label>
+              <br></br>
+              <input type="file" name="user_file">
+              <br></br>
+              <button type="submit">Upload</button>
+          </form>
+      {% endif %}
+      <br><hr>
+      {% for file_counter in files %}
+          {% set data_for_delete = file_counter.key + '*' + category_name + '*' + course_name + '*' + lesson_name %}
+          {{ file_counter.key }}
+          {% if current_user.is_admin or current_user.is_teacher %}
+              <form action="/delete" method="POST">
+                  <input type="hidden" name="key" value="{{ data_for_delete }}">
+                  <button type="submit">Delete</button>
+              </form>
+          {% endif %}
+          <form action="/download" method="POST">
+              <input type="hidden" name="key" value="{{ file_counter.key }}">
+              <button type="submit">Download</button>
+          </form>
+          {{ file_counter.key | file_type }}
+          {% set type_of_file = file_counter.key | file_type %}
+          {% if type_of_file in ['video/mp4']  %}
+              {% set link = file_counter.bucket_name.name | create_presigned_url(file_counter.key, '3600') %}
+              <video controls>
+                  <source src="{{ link }}" type="{{ type_of_file }}"></video><br>
+          {% endif %}      
+          <hr>
+      {% endfor %}
 {% endblock %}
