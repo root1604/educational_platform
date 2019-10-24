@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>{{ category_name }}</h1><hr>
+    <h3>Courses</h3>
+    <form action="{{ url_for('category.page', link_path=category_name) }}" method="POST">
+        <label for="course">Add a course</label>
+        <br></br>
+        <input type="text" name="course">
+        <br></br>
+        <button type="submit">Add a course</button>
+    </form>
+    <br><hr>
+    {% for course_counter in courses %}
+    <a href="{{ url_for('course.course_page', category_name=category_name, course_name=course_counter.name) }}">{{ course_counter.name }}</a><br>
+        <form action="/delete_a_course" method="POST">
+            <input type="hidden" name="course_id" value="{{ course_counter.id }}">
+            <button type="submit">Delete</button>
+        </form>
+        <br><br>
+    {% endfor %}
+    <br> 
+{% endblock %}

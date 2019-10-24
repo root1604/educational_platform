@@ -21,14 +21,16 @@ source env/bin/activate<br>
     env\Scripts\activate<br>
 pip install flask boto3 flask-sqlalchemy<br></p>
 <p>3. Файлы приложения создаем в папке webapp<br>
-__init__.py<br>
+__init__.py<br><br>
 config.py<br>
 ===========================================<br>
+from datetime import timedelta<br>
 import os<br>
-
+<br>
 basedir = os.path.abspath(os.path.dirname(__file__))<br>
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, '..', 'YOUR_DATABASE_NAME')<br>
-
+<br>
+REMEMBER_COOKIE_DURATION = timedelta(days=1)<br>
 SECRET_KEY = YOUR_RANDOMLY_GENERATED_SECRET_KEY<br>
 S3_BUCKET = YOUR_BUCKET_NAME<br>
 ============================================<br><br>

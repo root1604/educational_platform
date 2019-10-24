@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{{ page_title }}</title>
+    </head>
+    <body> 
+        {% if not is_homepage %}
+        <a href="/">Return to homepage</a>
+        {% endif %}
+        {% if not is_loginpage %}
+            {% if current_user.is_authenticated %}
+                Hi {{ current_user.username }}!
+                <a href="{{ url_for('login.logout') }}">logout</a>  
+                {% if not is_catalogpage %}
+                    <a href="/categories">Go to our catalog</a> 
+                {% endif %}
+            {% else %} 
+                <a href="{{ url_for('login.login') }}">Login</a> 
+            {% endif %}
+        {% endif %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html> 
