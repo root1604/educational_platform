@@ -20,9 +20,7 @@ source env/bin/activate<br>
     For Windows:<br>
     env\Scripts\activate<br>
 pip install flask boto3 flask-sqlalchemy<br></p>
-<p>3. Файлы приложения создаем в папке webapp<br>
-__init__.py<br><br>
-config.py<br>
+<p>3. Configuration file config.py<br>
 ===========================================<br>
 from datetime import timedelta<br>
 import os<br>
@@ -34,11 +32,6 @@ REMEMBER_COOKIE_DURATION = timedelta(days=1)<br>
 SECRET_KEY = YOUR_RANDOMLY_GENERATED_SECRET_KEY<br>
 S3_BUCKET = YOUR_BUCKET_NAME<br>
 ============================================<br><br>
-templates/index.html<br>
-templates/error.html<br>
-upload_file_to_s3.py<br>
-filters.py<br>
-model.py<br></p>
 <p>4. Запускаем приложение<br>
 export FLASK_APP=webapp && export FLASK_ENV=development && flask run<br>
     For Windows:<br>
