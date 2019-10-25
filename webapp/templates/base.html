@@ -19,6 +19,14 @@
                 <a href="{{ url_for('login.login') }}">Login</a> 
             {% endif %}
         {% endif %}
+        {% if current_user.is_admin %}
+            {% if not is_adminpage %}
+                <a href="{{ url_for('admin.admin_index') }}">Settings</a>
+            {% endif %}
+            {% if not is_registrationpage %}
+                <a href="{{ url_for('admin.registration') }}">Registration</a>
+            {% endif %}
+        {% endif %}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="alert alert-warning" role="alert">

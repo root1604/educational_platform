@@ -116,6 +116,8 @@ def lesson_page(category_name, course_name, lesson_name):
                     is_homepage = False
                     is_loginpage = False
                     is_catalogpage = False
+                    is_adminpage = False
+                    is_registrationpage = False
                     lesson_videos = Video.query.filter(Video.lesson_id==lesson_exists.id).all()
                     my_bucket = get_bucket_from_s3()
                     s3 = boto3.resource('s3')
@@ -138,7 +140,8 @@ def lesson_page(category_name, course_name, lesson_name):
                     return render_template('lessons/lesson.html', category_name=category_name,
                                             course_name=course_name, lesson_name=lesson_name, 
                                             files=summaries, page_title=title, is_homepage=is_homepage,
-                                            is_loginpage=is_loginpage, is_catalogpage=is_catalogpage)
+                                            is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,
+                                            is_adminpage=is_adminpage, is_registrationpage=is_registrationpage)
                 else:
                     return render_template('error.html')                           
             else:

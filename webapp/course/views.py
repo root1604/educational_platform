@@ -34,10 +34,13 @@ def course_page(category_name, course_name):
                 is_homepage = False
                 is_loginpage = False
                 is_catalogpage = False
+                is_adminpage = False
+                is_registrationpage = False
                 lessons = Lesson.query.filter(Lesson.course_id==course_exists.id).all()   
                 return render_template('courses/course.html', category_name=category_name, course_name=course_name,
-                                        lessons=lessons, page_title=title, is_homepage=is_homepage, is_loginpage=is_loginpage,
-                                        is_catalogpage=is_catalogpage) 
+                                        lessons=lessons, page_title=title, is_homepage=is_homepage,
+                                        is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,
+                                        is_adminpage=is_adminpage, is_registrationpage=is_registrationpage) 
             else:
                 return render_template('error.html')     
         else:

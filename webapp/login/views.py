@@ -13,8 +13,12 @@ def login():
     login_form = LoginForm()
     is_homepage = False
     is_loginpage = True
+    is_catalogpage = False
+    is_adminpage = False
+    is_registrationpage = False
     return render_template('login/login.html', page_title=title, form=login_form, is_homepage=is_homepage,
-                            is_loginpage=is_loginpage)   
+                            is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,
+                            is_adminpage=is_adminpage, is_registrationpage=is_registrationpage)   
 
 @blueprint.route('/process-login', methods=['POST'])
 def process_login():
