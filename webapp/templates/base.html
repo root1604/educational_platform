@@ -29,10 +29,11 @@
         {% endif %}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <div class="alert alert-warning" role="alert">
-                    {% for message in messages %}
-                        {{ message }}<br>
-                    {% endfor %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert"></div>
+                        {{ message }}
+                    </div>
+                {% endfor %}
                 </div>
             {% endif %}
         {% endwith %}

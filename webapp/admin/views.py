@@ -2,6 +2,7 @@ from flask import Blueprint, flash, render_template, redirect, request, url_for
 from flask_login import login_required, current_user
 from webapp.db.db import db
 from webapp.login.decorators import admin_required
+from webapp.login.forms import RegistrationForm
 from webapp.login.models import User
 
 blueprint = Blueprint('admin', __name__)
@@ -32,26 +33,24 @@ def registration():
         is_catalogpage = False
         is_adminpage = False
         is_registrationpage = True
+        form = RegistrationForm()
         return render_template('admin/registration.html', page_title=title, is_homepage=is_homepage,
                                 is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,
-                                is_adminpage=is_adminpage, is_registrationpage=is_registrationpage)
-    elif request.method == 'POST':
-        username = request.form['login']
-        username_exists=User.query.filter_by(username=username).first()
-        if username_exists and username == username_exists.username:
-            flash('The user ' + username + ' already exists.Try again')
+                                is_adminpage=is_adminpage, is_registrationpage=is_registrationpage,
+                                form=form)
+    elif request.method == 'POST': 
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            new_user = User(username=form.username.data, role=form.role.data)
+            new_user.set_password(form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('The user ' + new_user.username + ' was created successfully.')
+            return redirect(url_for('admin.admin_index'))
+        else:    
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash('Error in the field "{}":  {}'.format(getattr(form, field).label.text, error))
             return redirect(url_for('admin.registration'))
-        password_1 = request.form['password_1']
-        password_2 = request.form['password_2']
-        if not password_1 == password_2:
-            flash('''Those passwords didn't match. Try again.''')
-            return redirect(url_for('admin.registration'))
-        role = request.form['role']
-        new_user = User(username=username, role=role)
-        new_user.set_password(password_1)
-        db.session.add(new_user)
-        db.session.commit() 
-        flash('The user ' + username + ' was created successfully.')       
-        return redirect(url_for('homepage.index'))
     else:
         return redirect('/')

@@ -19,7 +19,7 @@ python3 -m venv env<br>
 source env/bin/activate<br>
     For Windows:<br>
     env\Scripts\activate<br>
-pip install flask boto3 flask-sqlalchemy<br></p>
+pip install -r requirements.txt<br></p>
 <p>3. Configuration file config.py<br>
 ===========================================<br>
 from datetime import timedelta<br>
@@ -27,6 +27,7 @@ import os<br>
 <br>
 basedir = os.path.abspath(os.path.dirname(__file__))<br>
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, '..', 'YOUR_DATABASE_NAME')<br>
+SQLALCHEMY_TRACK_MODIFICATIONS = False<br>
 <br>
 REMEMBER_COOKIE_DURATION = timedelta(days=1)<br>
 SECRET_KEY = YOUR_RANDOMLY_GENERATED_SECRET_KEY<br>
@@ -39,3 +40,9 @@ export FLASK_APP=webapp && export FLASK_ENV=development && flask run<br>
 <p>5. Создадим в корне проекта файл (educational_platform/create_db.py) для создания базы данных<br>
 Запустим файл create_db.py и убедимся, что база создалась<br>
 python create_db.py<br></p>
+<p>6. Enabling migrations mechamism.<br>
+Linux & Mac: export FLASK_APP=webapp && flask db init<br>
+Windows: set FLASK_APP=webapp && flask db init<br>
+After doing changes in the models of db execute<br>
+flask db migrate -m "comment"<br>
+flask db upgrade<br>
