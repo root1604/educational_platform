@@ -5,3 +5,4 @@ webapp/config.py
 *__pycache__*
 .idea/
 *.db
+change_name.sh
