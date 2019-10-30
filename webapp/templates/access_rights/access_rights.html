@@ -1,23 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Access rights</h1><hr>    
-    <table>
+    <h2>Access rights</h2><hr>   
+    <h3>Add user to course</h3>
+    <div class="col-4">
+        <form action="{{ url_for('access_levels.grant_access') }}" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+            {{ form.username.label }}<br>
+            {{ form.username() }}
+            </p>
+            <p>
+            {{ form.category.label }}<br>
+            {{ form.category() }}
+            </p>
+            <p>
+            {{ form.course.label }}<br>
+            {{ form.course() }}
+            </p>
+            <p>{{ form.submit }}</p>
+        </form>
+    </div>
+    <hr> 
+    <table border="1">
         <thead>
             <tr>
-                <th>id</th><th>user</th>
-                <th>category</th><th>course</th>
-                <th>grant_access</th>
+                <th></th>
+                <th>user</th>
+                <th>category</th>
+                <th>course</th>
                 <th>Delete</th>
             </tr>
         </thead>
         <tbody>
+            {% set counter = {'counter1': 1} %}
+            {% macro increment(dct, key, inc=1)%}
+                {% if dct.update({key: dct[key] + inc}) %} {% endif %}
+            {% endmacro %}
             {% for access_rights_counter in access_rights %}
                 <tr>
-                    <td>{{ access_rights_counter.id }}</td><td>{{ access_rights_counter.user }}</td>
-                    <td>{{ access_rights_counter.category}}</td><td>{{ access_rights_counter.course }}</td>
-                    <td>{{ access_rights_counter.grant_access }}</td>
-                    <td></td>
+                    <td>{{ counter['counter1'] }}</td>
+                    <td>{{ access_rights_counter.user }}</td>
+                    <td>{{ access_rights_counter.category}}</td>
+                    <td>{{ access_rights_counter.course }}</td>
+                    <td>
+                        <form action="{{ url_for('access_levels.delete_a_user_from_a_course') }}" method="POST">
+                            <input type="hidden" name="delete_access_rights_id" value="{{ access_rights_counter.id }}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
                 </tr>
+                {{ increment(counter, 'counter1') }}
             {% endfor %}
         </tbody>
     </table>    

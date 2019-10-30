@@ -31,7 +31,6 @@ def process_login():
             login_user(user, remember=form.remember_me.data)
             flash('You are logged in')
             return redirect(url_for('homepage.index'))
-
     flash('The username or password is wrong')
     return redirect(url_for('login.login'))
 
