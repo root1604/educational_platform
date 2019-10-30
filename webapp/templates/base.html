@@ -24,7 +24,10 @@
                 <a href="{{ url_for('admin.admin_index') }}">Settings</a>
             {% endif %}
             {% if not is_registrationpage %}
-                <a href="{{ url_for('admin.registration') }}">Registration</a>
+                <a href="{{ url_for('registration.registration') }}">Registration</a>
+            {% endif %}
+            {% if not is_access_rights_page %}
+                <a href="{{ url_for('access_levels.access_rights') }}">Access rights</a>
             {% endif %}
         {% endif %}
         {% with messages = get_flashed_messages() %}

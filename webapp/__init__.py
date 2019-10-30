@@ -1,7 +1,10 @@
 from flask import flash, Flask
 from flask_login import current_user, LoginManager,  login_required
 from flask_migrate import Migrate
+from webapp.access_rights.models import Access_rights
+from webapp.access_rights.views import blueprint as access_levels_blueprint
 from webapp.admin.views import blueprint as admin_blueprint
+from webapp.registration.views import blueprint as registration_blueprint
 from webapp.category.models import Category
 from webapp.category.views import blueprint as category_blueprint
 from webapp.content.models import Audio, Image, TextLecture, Video
@@ -27,7 +30,9 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'login.login'
     
+    app.register_blueprint(access_levels_blueprint)
     app.register_blueprint(admin_blueprint)
+    app.register_blueprint(registration_blueprint)
     app.register_blueprint(category_blueprint)
     app.register_blueprint(course_blueprint)
     app.register_blueprint(homepage_blueprint)

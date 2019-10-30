@@ -32,11 +32,12 @@ def add_a_category():
         is_catalogpage = True
         is_adminpage = False
         is_registrationpage = False
+        is_access_rights_page = False
         categories = Category.query.order_by(Category.name).all() 
         return render_template('categories/categories.html', categories=categories, page_title=title,
                                 is_homepage=is_homepage, is_loginpage=is_loginpage,
                                 is_catalogpage=is_catalogpage, is_adminpage=is_adminpage,
-                                is_registrationpage=is_registrationpage)
+                                is_registrationpage=is_registrationpage, is_access_rights_page=is_access_rights_page)
     else:
         return redirect('/')                            
 
@@ -81,11 +82,13 @@ def page(link_path):
             is_catalogpage = False
             is_adminpage = False
             is_registrationpage = False
+            is_access_rights_page = False
             courses = Course.query.filter(Course.category_id==category_exists.id).all()    
             return render_template('categories/category.html', category_name=link_path, 
-                                    courses=courses, page_title=title, is_homepage=is_homepage,
+                                    courses=courses, category_id=category_exists.id, page_title=title, is_homepage=is_homepage,
                                     is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,
-                                    is_adminpage=is_adminpage, is_registrationpage=is_registrationpage) 
+                                    is_adminpage=is_adminpage, is_registrationpage=is_registrationpage,
+                                    is_access_rights_page=is_access_rights_page) 
         else:
              return render_template('error.html')        
     else:

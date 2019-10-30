@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Access rights</h1><hr>    
+    <table>
+        <thead>
+            <tr>
+                <th>id</th><th>user</th>
+                <th>category</th><th>course</th>
+                <th>grant_access</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for access_rights_counter in access_rights %}
+                <tr>
+                    <td>{{ access_rights_counter.id }}</td><td>{{ access_rights_counter.user }}</td>
+                    <td>{{ access_rights_counter.category}}</td><td>{{ access_rights_counter.course }}</td>
+                    <td>{{ access_rights_counter.grant_access }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+{% endblock %}

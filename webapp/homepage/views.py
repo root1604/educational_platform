@@ -11,7 +11,9 @@ def index():
     is_catalogpage = False
     is_adminpage = False
     is_registrationpage = False
+    is_access_rights_page = False
     categories = Category.query.order_by(Category.name).all()  
     return render_template('homepage/index.html', categories=categories, page_title=title, is_homepage=is_homepage,
                             is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,
-                            is_adminpage=is_adminpage, is_registrationpage=is_registrationpage)
+                            is_adminpage=is_adminpage, is_registrationpage=is_registrationpage,
+                            is_access_rights_page=is_access_rights_page)

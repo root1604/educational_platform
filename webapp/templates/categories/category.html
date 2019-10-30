@@ -19,6 +19,11 @@
                 <input type="hidden" name="course_id" value="{{ course_counter.id }}">
                 <button type="submit">Delete</button>
             </form>
+            <form action="/grant_access" method="POST">
+                <input type="hidden" name="course_id" value="{{ course_counter.id }}">
+                <input type="hidden" name="category_id" value="{{ category_id }}">
+                <button type="submit">Access rights for the course</button>
+            </form>
         {% endif %}
         <br><br>
     {% endfor %}
