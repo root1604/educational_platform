@@ -13,14 +13,18 @@
     {% endif %}
     <br><hr>
     {% for course_counter in courses %}
-    <a href="{{ url_for('course.course_page', category_name=category_name, course_name=course_counter.name) }}">{{ course_counter.name }}</a><br>
         {% if current_user.is_admin %}
-            <form action="/delete_a_course" method="POST">
-                <input type="hidden" name="course_id" value="{{ course_counter.id }}">
-                <button type="submit">Delete</button>
-            </form>
-        {% endif %}
-        <br><br>
+            <a href="{{ url_for('course.course_page', category_name=category_name, course_name=course_counter.name) }}">{{ course_counter.name }}</a><br>
+        {% else %}
+            <a href="{{ url_for('course.course_page', category_name=category_name, course_name=course_counter.Course) }}">{{ course_counter.Course }}</a><br>
+        {% endif %}    
+                {% if current_user.is_admin %}
+                    <form action="/delete_a_course" method="POST">
+                        <input type="hidden" name="course_id" value="{{ course_counter.id }}">
+                        <button type="submit">Delete</button>
+                    </form>
+                {% endif %}
+                <br><br>
     {% endfor %}
     <br> 
 {% endblock %}

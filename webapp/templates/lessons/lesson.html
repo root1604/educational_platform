@@ -24,7 +24,8 @@
               </form>
           {% endif %}
           <form action="/download" method="POST">
-              <input type="hidden" name="key" value="{{ file_counter.key }}">
+              {% set data_for_download = file_counter.key + '*' + category_name + '*' + course_name + '*' + lesson_name %}
+              <input type="hidden" name="key" value="{{ data_for_download }}">
               <button type="submit">Download</button>
           </form>
           {{ file_counter.key | file_type }}

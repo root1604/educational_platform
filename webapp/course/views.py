@@ -1,6 +1,7 @@
-from flask import Blueprint, redirect,render_template, request
+from flask import Blueprint, flash, redirect,render_template, request
 from flask_login import login_required, current_user
 from sqlalchemy import exc
+from webapp.access_rights.models import Access_rights
 from webapp.category.models import Category
 from webapp.course.models import Course
 from webapp.lesson.models import Lesson
@@ -15,36 +16,46 @@ def course_page(category_name, course_name):
     if category_exists:
         course_exists = Course.query.filter(Course.name==course_name, Course.category_id==category_exists.id).first() 
         if course_exists:
-            if request.method == 'POST':
-                if current_user.is_admin or current_user.is_teacher:
-                    try:
-                        name = request.form['lesson']
-                        lesson_description = 'This is a lesson description'
-                        new_lesson = Lesson(name, course_exists.id, lesson_description)              
-                        if new_lesson.name != '':
-                            db.session.add(new_lesson)
-                            db.session.commit()
-                    except(exc.IntegrityError):
-                        print('the lesson exists')
-                    return redirect('/' + category_name + '/' + course_name) 
+            if current_user.is_admin:
+                access_right_exists = True
+            else:    
+                access_right_exists = Access_rights.query.filter(Access_rights.user_id==current_user.id,
+                                                                Access_rights.category_id==category_exists.id,
+                                                                Access_rights.course_id==course_exists.id,
+                                                                Access_rights.grant_access==True).first()
+            if access_right_exists:  
+                if request.method == 'POST':
+                    if current_user.is_admin or current_user.is_teacher:
+                        try:
+                            name = request.form['lesson']
+                            lesson_description = 'This is a lesson description'
+                            new_lesson = Lesson(name, course_exists.id, lesson_description)              
+                            if new_lesson.name != '':
+                                db.session.add(new_lesson)
+                                db.session.commit()
+                        except(exc.IntegrityError):
+                            flash('the lesson exists')
+                        return redirect('/' + category_name + '/' + course_name) 
+                    else:
+                        return redirect('/' + category_name + '/' + course_name)   
+                elif request.method == 'GET': 
+                    title = course_name
+                    is_homepage = False
+                    is_loginpage = False
+                    is_catalogpage = False
+                    is_adminpage = False
+                    is_registrationpage = False
+                    is_access_rights_page = False
+                    lessons = Lesson.query.filter(Lesson.course_id==course_exists.id).all()   
+                    return render_template('courses/course.html', category_name=category_name, course_name=course_name,
+                                            lessons=lessons, page_title=title, is_homepage=is_homepage,
+                                            is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,
+                                            is_adminpage=is_adminpage, is_registrationpage=is_registrationpage,
+                                            is_access_rights_page=is_access_rights_page) 
                 else:
-                    return redirect('/' + category_name + '/' + course_name)   
-            elif request.method == 'GET': 
-                title = course_name
-                is_homepage = False
-                is_loginpage = False
-                is_catalogpage = False
-                is_adminpage = False
-                is_registrationpage = False
-                is_access_rights_page = False
-                lessons = Lesson.query.filter(Lesson.course_id==course_exists.id).all()   
-                return render_template('courses/course.html', category_name=category_name, course_name=course_name,
-                                        lessons=lessons, page_title=title, is_homepage=is_homepage,
-                                        is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,
-                                        is_adminpage=is_adminpage, is_registrationpage=is_registrationpage,
-                                        is_access_rights_page=is_access_rights_page) 
+                    return render_template('error.html')  
             else:
-                return render_template('error.html')     
+                return render_template('error.html')            
         else:
             return render_template('error.html')    
     else:

@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect,render_template, request
 from flask_login import login_required, current_user
 from sqlalchemy import exc
+from webapp.access_rights.models import Access_rights
 from webapp.category.models import Category
 from webapp.course.models import Course
 from webapp.db.db import db
@@ -83,7 +84,16 @@ def page(link_path):
             is_adminpage = False
             is_registrationpage = False
             is_access_rights_page = False
-            courses = Course.query.filter(Course.category_id==category_exists.id).all()    
+            if current_user.is_admin:
+                courses = Course.query.filter(Course.category_id==category_exists.id).all() 
+            else:
+                courses = (db.session.query(Access_rights, Course)
+                                .join(Course, Course.id == Access_rights.course_id)
+                                .filter(Access_rights.user_id == current_user.id, 
+                                 Access_rights.category_id == category_exists.id,
+                                 Access_rights.grant_access == True)
+                                .order_by(Course.name)
+                                ).all()        
             return render_template('categories/category.html', category_name=link_path, 
                                     courses=courses, category_id=category_exists.id, page_title=title, is_homepage=is_homepage,
                                     is_loginpage=is_loginpage, is_catalogpage=is_catalogpage,

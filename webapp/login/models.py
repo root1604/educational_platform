@@ -25,7 +25,7 @@ class User(db.Model, UserMixin):
 
     @property
     def is_student(self):
-        return self.role == 'student'    
+        return self.role == 'student'  
 
     def __repr__(self):
         return self.username
