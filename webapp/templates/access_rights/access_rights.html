@@ -10,10 +10,6 @@
             {{ form.username() }}
             </p>
             <p>
-            {{ form.category.label }}<br>
-            {{ form.category() }}
-            </p>
-            <p>
             {{ form.course.label }}<br>
             {{ form.course() }}
             </p>
@@ -24,11 +20,49 @@
     <table border="1">
         <thead>
             <tr>
-                <th></th>
-                <th>user</th>
-                <th>category</th>
-                <th>course</th>
-                <th>Delete</th>
+                <th rowspan="2"></th>
+                <th colspan="2">user</th>
+                <th colspan="2">category</th>
+                <th colspan="2">course</th>
+                <th rowspan="2">Delete</th>
+            </tr>
+            <tr>
+                <th>
+                    <form action="{{ url_for('access_levels.access_rights') }}" method="POST">
+                            <input type="hidden" name="sort_by" value="sort_by_username_asc">
+                            <button type="submit">&#8593;</button>
+                    </form>
+                </th>
+                <th>
+                    <form action="{{ url_for('access_levels.access_rights') }}" method="POST">
+                        <input type="hidden" name="sort_by" value="sort_by_username_desc">
+                        <button type="submit">&#8595;</button>
+                    </form>
+                </th>
+                <th>
+                    <form action="{{ url_for('access_levels.access_rights') }}" method="POST">
+                        <input type="hidden" name="sort_by" value="sort_by_category_asc">
+                        <button type="submit">&#8593;</button>
+                    </form>
+                </th>
+                <th>
+                    <form action="{{ url_for('access_levels.access_rights') }}" method="POST">
+                        <input type="hidden" name="sort_by" value="sort_by_category_desc">
+                        <button type="submit">&#8595;</button>
+                    </form>
+                </th>
+                <th>
+                    <form action="{{ url_for('access_levels.access_rights') }}" method="POST">
+                        <input type="hidden" name="sort_by" value="sort_by_course_asc">
+                        <button type="submit">&#8593;</button>
+                    </form>
+                </th>
+                <th>
+                    <form action="{{ url_for('access_levels.access_rights') }}" method="POST">
+                        <input type="hidden" name="sort_by" value="sort_by_course_desc">
+                        <button type="submit">&#8595;</button>
+                    </form>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -39,12 +73,12 @@
             {% for access_rights_counter in access_rights %}
                 <tr>
                     <td>{{ counter['counter1'] }}</td>
-                    <td>{{ access_rights_counter.user }}</td>
-                    <td>{{ access_rights_counter.category}}</td>
-                    <td>{{ access_rights_counter.course }}</td>
+                    <td colspan="2">{{ access_rights_counter.User }}</td>
+                    <td colspan="2">{{ access_rights_counter.Category}}</td>
+                    <td colspan="2">{{ access_rights_counter.Course }}</td>
                     <td>
                         <form action="{{ url_for('access_levels.delete_a_user_from_a_course') }}" method="POST">
-                            <input type="hidden" name="delete_access_rights_id" value="{{ access_rights_counter.id }}">
+                            <input type="hidden" name="delete_access_rights_id" value="{{ access_rights_counter.Access_rights.id }}">
                             <button type="submit">Delete</button>
                         </form>
                     </td>
