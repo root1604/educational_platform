@@ -44,5 +44,5 @@ python create_db.py<br></p>
 Linux & Mac: export FLASK_APP=webapp && flask db init<br>
 Windows: set FLASK_APP=webapp && flask db init<br>
 After doing changes in the models of db execute<br>
-FLASK_APP=webapp && flask db migrate -m "comment"<br>
+export FLASK_APP=webapp && flask db migrate -m "comment"<br>
 flask db upgrade<br>

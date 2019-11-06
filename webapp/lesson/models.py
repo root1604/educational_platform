@@ -3,7 +3,7 @@ from webapp.db.db import db
 class Lesson(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id', ondelete='CASCADE'), nullable=False)
     description = db.Column(db.Text(1000), nullable=True)
     videos = db.relationship('Video', backref='lesson', lazy='dynamic')
     images = db.relationship('Image', backref='lesson', lazy='dynamic')

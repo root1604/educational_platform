@@ -2,9 +2,9 @@ from webapp.db.db import db
 
 class Access_rights(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id', ondelete='CASCADE'), nullable=False)
     grant_access = db.Column(db.Boolean, default=False, nullable=False)
     __table_args__ = (db.UniqueConstraint('user_id', 'category_id', 'course_id'),)
     def __init__(self, user_id, category_id, course_id, grant_access):

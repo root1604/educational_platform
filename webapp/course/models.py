@@ -3,7 +3,7 @@ from webapp.db.db import db
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
     description = db.Column(db.Text(1000), nullable=True)
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')
     access_rights = db.relationship('Access_rights', backref='course', lazy='dynamic')
