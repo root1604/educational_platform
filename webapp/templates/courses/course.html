@@ -13,14 +13,14 @@
     {% endif %}
     <br><hr>
     {% for lesson_counter in lessons %}
-        <a href="{{ url_for('lesson.lesson_page', category_name=category_name, course_name=course_name, lesson_name=lesson_counter.name) }}">{{ lesson_counter.name }}</a><br>
+        <a href="{{ url_for('lesson.lesson_page', category_name=category_name, course_name=course_name, lesson_name=lesson_counter.name) }}">{{ lesson_counter.name }}</a><br><br>
         {% if current_user.is_admin or current_user.is_teacher %}
             <form action="/delete_a_lesson" method="POST">
                 <input type="hidden" name="lesson_id" value="{{ lesson_counter.id }}">
                 <button type="submit">Delete</button>
             </form>
         {% endif %}
-        <br><br>
+        <br><hr>
     {% endfor %}
     <br>
 {% endblock %}

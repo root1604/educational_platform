@@ -3,23 +3,23 @@
     <div class="col-4">
         <form action="{{ url_for('registration.registration') }}" method="post">
             {{ form.hidden_tag() }}
-            <p>
-            {{ form.username.label }}<br>
-            {{ form.username() }}
-            </p>
-            <p>
-            {{ form.password.label }}<br>
-            {{ form.password() }}
-            </p>
-            <p>
-            {{ form.password2.label }}<br>
-            {{ form.password2() }}
-            </p>
-            <p>
-            {{ form.role.label }}<br>
-            {{ form.role() }}
-            </p>
-            <p>{{ form.submit }}</p>
+            <div class="form-group">
+                {{ form.username.label }}<br>
+                {{ form.username() }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label }}<br>
+                {{ form.password() }}
+            </div>
+            <div class="form-group">
+                {{ form.password2.label }}<br>
+                {{ form.password2() }}
+            </div>
+            <div class="form-group registration">                  
+                {{ form.role.label }}
+                {{ form.role() }}
+            </div>
+            <div>{{ form.submit }}</div>
         </form>
     </div>
 {% endblock %}

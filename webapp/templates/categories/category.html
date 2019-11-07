@@ -14,9 +14,9 @@
     <br><hr>
     {% for course_counter in courses %}
         {% if current_user.is_admin %}
-            <a href="{{ url_for('course.course_page', category_name=category_name, course_name=course_counter.name) }}">{{ course_counter.name }}</a><br>
+            <a href="{{ url_for('course.course_page', category_name=category_name, course_name=course_counter.name) }}">{{ course_counter.name }}</a><br><br>
         {% else %}
-            <a href="{{ url_for('course.course_page', category_name=category_name, course_name=course_counter.Course) }}">{{ course_counter.Course }}</a><br>
+            <a href="{{ url_for('course.course_page', category_name=category_name, course_name=course_counter.Course) }}">{{ course_counter.Course }}</a><br><br>
         {% endif %}    
                 {% if current_user.is_admin %}
                     <form action="/delete_a_course" method="POST">
@@ -24,7 +24,7 @@
                         <button type="submit">Delete</button>
                     </form>
                 {% endif %}
-                <br><br>
+                <br><hr>
     {% endfor %}
     <br> 
 {% endblock %}

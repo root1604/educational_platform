@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="col-4">
     <form action="{{ url_for('login.process_login', next=request.full_path) }}" method="post">
         {{ form.hidden_tag() }}
         <div class="form-group">
@@ -16,4 +17,5 @@
         </div>
         <p>{{ form.submit }}</p>
     </form>
+</div>
 {% endblock %}
