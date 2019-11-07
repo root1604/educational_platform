@@ -11,4 +11,7 @@ def get_redirect_target():
         if not target:
             continue
         if is_safe_url(target):
-            return target
+            if target == '/login?':
+                return '/'
+            else:    
+                return target

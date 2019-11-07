@@ -2,44 +2,30 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <title>{{ page_title }}</title>
     </head>
     <body> 
-        {% if not is_homepage %}
-        <a href="/">Return to homepage</a>
-        {% endif %}
-        {% if not is_loginpage %}
-            {% if current_user.is_authenticated %}
-                Hi {{ current_user.username }}!
-                <a href="{{ url_for('login.logout') }}">logout</a>  
-                {% if not is_catalogpage %}
-                    <a href="/categories">Go to our catalog</a> 
-                {% endif %}
-            {% else %} 
-                <a href="{{ url_for('login.login') }}">Login</a> 
-            {% endif %}
-        {% endif %}
-        {% if current_user.is_admin %}
-            {% if not is_adminpage %}
-                <a href="{{ url_for('admin.admin_index') }}">Settings</a>
-            {% endif %}
-            {% if not is_registrationpage %}
-                <a href="{{ url_for('registration.registration') }}">Registration</a>
-            {% endif %}
-            {% if not is_access_rights_page %}
-                <a href="{{ url_for('access_levels.access_rights') }}">Access rights</a>
-            {% endif %}
-        {% endif %}
+        {% include 'menu.html' %}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-danger" role="alert"></div>
+                    <div class="alert alert-danger" role="alert">
                         {{ message }}
                     </div>
-                {% endfor %}
-                </div>
+                {% endfor %}              
             {% endif %}
         {% endwith %}
-        {% block content %}{% endblock %}
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </body>
 </html> 

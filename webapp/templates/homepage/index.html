@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>HOMEPAGE</h1><hr>
-    {% for category in categories %}
-        <div>{{ category.name }}</div><br><br>
-        <div>{{ category.description }}</div>
-        <br><br><br><br>
-    {% endfor %}
-    <br>
+    <div class="row">
+        <div class="col-12">
+            {% for category in categories %}
+                <div>{{ category.name }}</div><br><br>
+                <div>{{ category.description }}</div>
+                <br><br><br><br>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
