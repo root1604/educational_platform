@@ -1,4 +1,4 @@
-<p>1. Пропишем в переменные данные для доступа к S3. <br><br>
+<p>1. Set credentials for access AWS S3 bucket. <br><br>
 ~/.aws/credentials <br>
 =========================================<br>
 [default]<br>
@@ -12,7 +12,7 @@ aws_secret_access_key = YOUR_SECRET_KEY<br>
 region=eu-north-1<br>
 ==========================================<br></p>
 
-<p>2. Создадим проект<br>
+<p>2. Create project<br>
 mkdir -p educational_platform/webapp<br>
 cd educational_platform<br>
 python3 -m venv env<br>
@@ -33,12 +33,12 @@ REMEMBER_COOKIE_DURATION = timedelta(days=1)<br>
 SECRET_KEY = YOUR_RANDOMLY_GENERATED_SECRET_KEY<br>
 S3_BUCKET = YOUR_BUCKET_NAME<br>
 ============================================<br><br>
-<p>4. Запускаем приложение<br>
+<p>4. Start application<br>
 export FLASK_APP=webapp && export FLASK_ENV=development && flask run<br>
     For Windows:<br>
     set FLASK_APP=webapp && set FLASK_ENV=development && set FLASK_DEBUG=1 && flask run<br></p>
-<p>5. Создадим в корне проекта файл (educational_platform/create_db.py) для создания базы данных<br>
-Запустим файл create_db.py и убедимся, что база создалась<br>
+<p>5. Create file at the root of the project (educational_platform/create_db.py) for create database<br>
+Run create_db.py and make sure database was created<br>
 python create_db.py<br></p>
 <p>6. Enabling migrations mechamism.<br>
 Linux & Mac: export FLASK_APP=webapp && flask db init<br>
